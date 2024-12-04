@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-chunking-test
+  namespace: kafka
+  labels:
+    app: kafka-chunking-test
+spec:
+  containers:
+    - name: kafka-chunking-test
+      image: chriswhiteley81/kafka-chunking-test:latest
+      env:
+        - name: BOOTSTRAP_SERVER
+          value: kafka-0.kafka-headless.kafka.svc.cluster.local:9093,kafka-1.kafka-headless.kafka.svc.cluster.local:9093,kafka-2.kafka-headless.kafka.svc.cluster.local:9093
+      volumeMounts:
+        - mountPath: /etc/kafka/secrets/
+          name: kafka-client
+  volumes:
+    - name: kafka-client
+      configMap:
+        name: kafka-client
+  restartPolicy: Never
